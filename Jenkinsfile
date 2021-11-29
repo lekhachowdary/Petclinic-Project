@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "tyitzhak/spring-petclinic-hub"
+    registry = "sreelekhaa/petclinic"
     registryCredential = 'docker-hub'
     dockerImage = ''
   }
@@ -10,24 +10,12 @@ pipeline {
     jdk 'jdk8'
   } 
   stages {
-    stage('Cloning Git') {
-      steps {
-        git 'https://github.com/talitz/spring-petclinic-jenkins-pipeline.git'
-      }
-    }
-    stage('Compile') {
-       steps {
-         sh 'mvn compile' //only compilation of the code
-       }
-    }
-    stage('Test') {
+    stage('Maven Build Artifact') {
       steps {
         sh '''
         mvn clean install
-        ls
-        pwd
-        ''' 
-        //if the code is compiled, we test and package it in its distributable format; run IT and store in local repository
+        ls -ltr target/
+        '''
       }
     }
     stage('Building Image') {
